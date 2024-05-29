@@ -37,7 +37,7 @@ function loadFood(){
     qtyElements.forEach((input)=>{
         input.addEventListener('change',changeQty);
     });
- }
+ 
 
 
 
@@ -49,13 +49,18 @@ cartBtns.forEach((btn)=>{
 });
 
 
+updateTotal();
 
+
+ }
 
 
 
  //Remove Item
     function removeItem(){
      if (confirm('Are you sure to remove'))  {
+        let title = this.parentElement.querySelector ('.cart-food-title').innerHTML;
+         itemList=itemList.filter(el=>el.title1!=title);
     this.parentElement.remove();
      }
  }
@@ -67,7 +72,14 @@ function changeQty(){
     if(isNaN(this.value) || this.value<1){
         this.value=1;
     }
+
+    loadContent();
 }
+
+
+let itemList=[];
+
+
 
 
 //add cart
@@ -78,6 +90,76 @@ function addCart(){
    let imgSrc=food.querySelector('.food-icon').src;
 
 // console.log(title,price.imgSrc);
+
+
+let newPrpduct={title,price,imgSrc}
+
+//Check Product already exist in cart
+
+if (itemList.find((el) => el.title==newPrpduct.title))
+    {
+        alert("Product Already added in Card");
+        return;
+    }
+    else{
+        itemList.push(newPrpduct);
+    }
+
+
+let newProductElement = createCartProduct( 
+    title, price, imgSrc
+);
+
+let element= document.createElement('div');
+element.innerHTML=newProductElement;
+
+let cartBasket = document.querySelector('.cart-content');
+
+cartBasket.append(element);
+loadContent();
   
    
+}
+
+
+
+function createCartProduct(title,price,imgSrc) {
+
+    return `
+    <div class="cart-box">
+        <img src="${imgSrc}" class="cart-img">
+        <div class="detail-box">
+
+        <div class="cart-food-title">${title}</div>
+            <div class="price-box">
+                <div class="cart-price">${price}</div>
+                <div class="cart-amt">${price}</div>
+            </div>
+            <input type="number" value="1" class="cart-quantity">
+        </div>
+        <ion-icon name="trash" class="cart-remove"></ion-icon>
+    </div>
+    `;
+}
+
+
+
+function updateTotal()
+{
+  const cartItems=document.querySelectorAll('.cart-box');
+  const totalValue=document.querySelector('.total-price');
+
+  let total=0;
+
+  cartItems.forEach(product=>{
+    let priceElement=product.querySelector('.cart-price');
+    let price=parseFloat(priceElement.innerHTML.replace("Rs.",""));
+    let qty=product.querySelector('.cart-quantity').value;
+    total+=(price*qty);
+
+    product.querySelector('.cart-amt').innerText="Rs." +price*qty;
+  });
+
+  totalValue.innerHTML='Rs. '+total;
+
 }
