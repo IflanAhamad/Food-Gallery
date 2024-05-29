@@ -162,4 +162,11 @@ function updateTotal()
 
   totalValue.innerHTML='Rs. '+total;
 
+
+  //Add Product Count in cart Icon
+
+  const cartCount=document.querySelector('.cart-count');
+  let count=itemList.length;
+  cartCount.innerHTML=count;
+
 }
